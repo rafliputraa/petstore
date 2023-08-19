@@ -1,0 +1,18 @@
+app:
+  name: 'petstore'
+  version: '1.0.0'
+
+http:
+  port: '8080'
+
+logger:
+  log_level: 'debug'
+  rollbar_env: 'petstore'
+
+postgres:
+  host: localhost
+  port: 5442
+  username: user
+  password: pass
+  db_name: db
+  pool_max: 2
