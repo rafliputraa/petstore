@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: petstore_db
+    environment:
+      POSTGRES_DB: petstore
+      POSTGRES_USER: rafliputraa
+      POSTGRES_PASSWORD: 1234567890
+    ports:
+      - "5442:5432"
+    volumes:
+      - petstore-data:/data/postgres
+    networks:
+      - petstore-network
+
+volumes:
+  petstore-data:
+   driver: local
+
+networks:
+  petstore-network:
+    driver: bridge
+

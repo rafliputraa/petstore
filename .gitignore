@@ -33,3 +33,4 @@ vendor
 
 !config.yml
 !.env
+!docker-compose.yml
