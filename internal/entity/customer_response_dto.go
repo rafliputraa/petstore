@@ -4,7 +4,7 @@ package entity
 
 // Customer -.
 type CustomerResponseDTO struct {
-	CustomerId  uint32 `json:"customerId"`
+	CustomerId  uint64 `json:"customerId"`
 	FirstName   string `json:"firstName"`
 	LastName    string `json:"lastName"`
 	Email       string `json:"email"`
