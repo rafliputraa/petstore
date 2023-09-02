@@ -6,7 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	usecase "github.com/rafliputraa/petstore/internal/usecase/customer"
+	usecase_customer "github.com/rafliputraa/petstore/internal/usecase/customer"
+	usecase_pet "github.com/rafliputraa/petstore/internal/usecase/pet"
 	"github.com/rafliputraa/petstore/pkg/logger"
 )
 
@@ -17,7 +18,7 @@ import (
 // @version     1.0
 // @host        localhost:8080
 // @BasePath    /v1
-func NewRouter(handler *gin.Engine, l logger.Interface, t usecase.Customer) {
+func NewRouter(handler *gin.Engine, l logger.Interface, t usecase_customer.Customer, p usecase_pet.Pet) {
 	// Options
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
@@ -32,5 +33,6 @@ func NewRouter(handler *gin.Engine, l logger.Interface, t usecase.Customer) {
 	h := handler.Group("/v1")
 	{
 		newCustomerRoutes(h, t, l)
+		newPetRoutes(h, p, l)
 	}
 }

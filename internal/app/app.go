@@ -10,7 +10,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rafliputraa/petstore/config"
 	v1 "github.com/rafliputraa/petstore/internal/controller/v1"
-	usecase "github.com/rafliputraa/petstore/internal/usecase/customer"
+	usecase_customer "github.com/rafliputraa/petstore/internal/usecase/customer"
+	usecase_pet "github.com/rafliputraa/petstore/internal/usecase/pet"
 	"github.com/rafliputraa/petstore/internal/usecase/repo"
 	"github.com/rafliputraa/petstore/pkg/httpserver"
 	"github.com/rafliputraa/petstore/pkg/logger"
@@ -29,13 +30,16 @@ func Run(cfg *config.Config) {
 	defer pg.Close()
 
 	// Use case
-	customerUseCase := usecase.New(
-		repo.New(pg),
+	customerUseCase := usecase_customer.New(
+		repo.NewCustomerRepo(pg),
+	)
+	petUseCase := usecase_pet.New(
+		repo.NewPetRepo(pg),
 	)
 
 	// HTTP Server
 	handler := gin.New()
-	v1.NewRouter(handler, l, customerUseCase)
+	v1.NewRouter(handler, l, customerUseCase, petUseCase)
 	httpServer := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
 
 	// Waiting signal

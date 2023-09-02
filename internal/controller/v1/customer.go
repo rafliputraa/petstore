@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/rafliputraa/petstore/internal/entity"
+	entity "github.com/rafliputraa/petstore/internal/entity/customer"
 	usecase "github.com/rafliputraa/petstore/internal/usecase/customer"
 	"github.com/rafliputraa/petstore/pkg/logger"
 )

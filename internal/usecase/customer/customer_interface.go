@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 
-	"github.com/rafliputraa/petstore/internal/entity"
+	entity "github.com/rafliputraa/petstore/internal/entity/customer"
 )
 
 type (

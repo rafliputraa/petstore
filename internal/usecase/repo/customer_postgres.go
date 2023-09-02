@@ -5,11 +5,9 @@ import (
 	"fmt"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/rafliputraa/petstore/internal/entity"
+	entity "github.com/rafliputraa/petstore/internal/entity/customer"
 	"github.com/rafliputraa/petstore/pkg/postgres"
 )
-
-const _defaultEntityCap = 64
 
 // CustomerRepo -.
 type CustomerRepo struct {
@@ -17,7 +15,7 @@ type CustomerRepo struct {
 }
 
 // New -.
-func New(pg *postgres.Postgres) *CustomerRepo {
+func NewCustomerRepo(pg *postgres.Postgres) *CustomerRepo {
 	return &CustomerRepo{pg}
 }
 
