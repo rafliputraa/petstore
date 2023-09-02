@@ -3,8 +3,8 @@ package repo
 import (
 	"context"
 	"fmt"
-	"log"
 
+	"github.com/Masterminds/squirrel"
 	"github.com/rafliputraa/petstore/internal/entity"
 	"github.com/rafliputraa/petstore/pkg/postgres"
 )
@@ -54,15 +54,12 @@ func (r *CustomerRepo) GetCustomer(ctx context.Context) ([]entity.CustomerRespon
 }
 
 // GetCustomerById -.
-func (r *CustomerRepo) GetCustomerById(ctx context.Context, id uint64) (*entity.CustomerResponseDTO, error) {
-	// strValue := strconv.FormatUint(id, 10)
-	e := entity.CustomerResponseDTO{}
+func (r *CustomerRepo) GetCustomerById(ctx context.Context, id string) ([]entity.CustomerResponseDTO, error) {
 	sql, _, err := r.Builder.
 		Select("*").
 		From("customers").
 		Where("customer_id = $1").
 		ToSql()
-	log.Println(sql)
 	if err != nil {
 		return nil, fmt.Errorf("CustomerRepo - GetCustomerById - r.Builder: %w", err)
 	}
@@ -73,18 +70,20 @@ func (r *CustomerRepo) GetCustomerById(ctx context.Context, id uint64) (*entity.
 	}
 	defer rows.Close()
 
-	err = rows.Scan(
-		&e.CustomerId,
-		&e.FirstName,
-		&e.LastName,
-		&e.Email,
-		&e.PhoneNumber,
-	)
-	if err != nil {
-		return nil, fmt.Errorf("CustomerRepo - GetCustomerById - rows.Scan: %w", err)
+	entities := make([]entity.CustomerResponseDTO, 0, _defaultEntityCap)
+
+	for rows.Next() {
+		e := entity.CustomerResponseDTO{}
+
+		err = rows.Scan(&e.CustomerId, &e.FirstName, &e.LastName, &e.Email, &e.PhoneNumber)
+		if err != nil {
+			return nil, fmt.Errorf("CustomerRepo - GetCustomerById - rows.Scan: %w", err)
+		}
+
+		entities = append(entities, e)
 	}
 
-	return &e, nil
+	return entities, nil
 }
 
 // InsertCustomer -.
@@ -101,6 +100,46 @@ func (r *CustomerRepo) InsertCustomer(ctx context.Context, t entity.CustomerRequ
 	_, err = r.Pool.Exec(ctx, sql, args...)
 	if err != nil {
 		return fmt.Errorf("CustomerRepo - Insert - r.Pool.Exec: %w", err)
+	}
+
+	return nil
+}
+
+// UpdateCustomer -.
+func (r *CustomerRepo) UpdateCustomer(ctx context.Context, id string, t entity.CustomerRequestDTO) error {
+	sql, args, err := r.Builder.
+		Update("customers").
+		Set("first_name", t.FirstName).
+		Set("last_name", t.LastName).
+		Set("email", t.Email).
+		Set("phone", t.PhoneNumber).
+		Where(squirrel.Eq{"customer_id": id}).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("CustomerRepo - Update - r.Builder: %w", err)
+	}
+
+	_, err = r.Pool.Exec(ctx, sql, args...)
+	if err != nil {
+		return fmt.Errorf("CustomerRepo - Update - r.Pool.Exec: %w", err)
+	}
+
+	return nil
+}
+
+// DeleteCustomer -.
+func (r *CustomerRepo) DeleteCustomer(ctx context.Context, id string) error {
+	sql, _, err := r.Builder.
+		Delete("customers").
+		Where("customer_id = $1").
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("CustomerRepo - Delete - r.Builder: %w", err)
+	}
+
+	_, err = r.Pool.Exec(ctx, sql, id)
+	if err != nil {
+		return fmt.Errorf("CustomerRepo - Delete - r.Pool.Exec: %w", err)
 	}
 
 	return nil

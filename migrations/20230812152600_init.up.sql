@@ -33,6 +33,5 @@ CREATE TABLE IF NOT EXISTS order_items (
   FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
 );
 
-CREATE INDEX idx_order_customer ON orders(customer_id);
 CREATE INDEX idx_order_item_order ON order_items(order_id);
 CREATE INDEX idx_order_item_pet ON order_items(pet_id);
