@@ -2,7 +2,11 @@ module github.com/rafliputraa/petstore
 
 go 1.20
 
-require github.com/ilyakaznacheev/cleanenv v1.5.0
+require (
+	github.com/aws/aws-lambda-go v1.41.0
+	github.com/awslabs/aws-lambda-go-api-proxy v0.14.0
+	github.com/ilyakaznacheev/cleanenv v1.5.0
+)
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
