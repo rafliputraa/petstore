@@ -34,3 +34,4 @@ vendor
 !config.yml
 !.env
 !docker-compose.yml
+!petstore-deployment.sh
